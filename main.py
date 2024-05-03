@@ -42,6 +42,9 @@ def root():
 # Path parameter
 @app.get("/student/{student_id}")
 def getStudentInfo(student_id: int = Path(description="The Id of the student.", gt=0)):
+    if student_id not in students:
+        return {"status": 404, "msg": "Not Found"}
+    
     return students[student_id]
 
 # Query parameter - required
@@ -105,5 +108,15 @@ def updateStudent(student_id: int, student: UpdateStudent):
 # ******* DELETE METHOD ********
 # ----------------------------
 
-
+@app.delete("/delete-student/{student_id}")
+def deleteStudent(student_id: int):
+    if student_id not in students:
+        return {"status": 404, "msg": "Not Found"}
+    
+    del students[student_id]
+    
+    return {
+        "msg": "student deleted successfully",
+        "data": students
+    }
         
